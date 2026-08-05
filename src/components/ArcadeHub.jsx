@@ -241,6 +241,7 @@ export default function ArcadeHub() {
   const [crushHighScore, setCrushHighScore] = useState(() => parseInt(localStorage.getItem('crush_high') || '0'));
   const [crushSwapping, setCrushSwapping] = useState(false);
   const [draggedIdx, setDraggedIdx] = useState(null);
+  const touchStartRef = useRef(null);
 
   const initCrushGame = () => {
     let arr = [];
@@ -391,6 +392,50 @@ export default function ArcadeHub() {
     if (draggedIdx === null || crushSwapping || crushMoves <= 0) return;
     triggerSwapAction(draggedIdx, index);
     setDraggedIdx(null);
+  };
+
+  const handleTouchStart = (e, index) => {
+    if (crushMoves <= 0 || crushSwapping) return;
+    const touch = e.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      index: index
+    };
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartRef.current || crushMoves <= 0 || crushSwapping) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartRef.current.x;
+    const dy = touch.clientY - touchStartRef.current.y;
+    const threshold = 35; // Swipe distance threshold in pixels
+
+    const firstIdx = touchStartRef.current.index;
+    let secondIdx = null;
+
+    const r1 = Math.floor(firstIdx / CRUSH_SIZE);
+    const c1 = firstIdx % CRUSH_SIZE;
+
+    // Determine direction
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > threshold && c1 < CRUSH_SIZE - 1) {
+        secondIdx = firstIdx + 1; // Swipe Right
+      } else if (dx < -threshold && c1 > 0) {
+        secondIdx = firstIdx - 1; // Swipe Left
+      }
+    } else {
+      if (dy > threshold && r1 < CRUSH_SIZE - 1) {
+        secondIdx = firstIdx + CRUSH_SIZE; // Swipe Down
+      } else if (dy < -threshold && r1 > 0) {
+        secondIdx = firstIdx - CRUSH_SIZE; // Swipe Up
+      }
+    }
+
+    if (secondIdx !== null) {
+      triggerSwapAction(firstIdx, secondIdx);
+    }
+    touchStartRef.current = null;
   };
 
   const openCandyCrush = () => {
@@ -572,6 +617,8 @@ export default function ArcadeHub() {
                         onDragStart={(e) => handleDragStart(e, i)}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, i)}
+                        onTouchStart={(e) => handleTouchStart(e, i)}
+                        onTouchEnd={handleTouchEnd}
                         className="w-full h-full aspect-square rounded-lg flex items-center justify-center text-xl cursor-pointer select-none border transition-all duration-150 relative bg-white/[0.02] p-0"
                         style={{
                           borderColor: isSelected ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.05)',
