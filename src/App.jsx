@@ -4,7 +4,7 @@ import Hero from './components/Hero';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import CssLab from './components/CssLab';
-import ArcadeGame from './components/ArcadeGame';
+import ParticleSandbox from './components/ParticleSandbox';
 import ContactForm from './components/ContactForm';
 import { ShoppingCart, Code2, Palette, Server, Cloud, Database } from 'lucide-react';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
@@ -38,7 +38,7 @@ export default function App() {
     { href: '#projects',   label: 'Projects' },
     { href: '#skills',     label: 'Capabilities' },
     { href: '#css-lab',    label: 'CSS Lab' },
-    { href: '#arcade',     label: 'Arcade' },
+    { href: '#arcade',     label: 'Sandbox' },
   ];
 
   const closeMenu = () => setMobileMenuOpen(false);
@@ -254,7 +254,7 @@ export default function App() {
 
         <CssLab hue={hue} setHue={setHue} speedMultiplier={speedMultiplier} setSpeedMultiplier={setSpeedMultiplier} blurVal={blurVal} setBlurVal={setBlurVal} />
 
-        <ArcadeGame />
+        <ParticleSandbox />
 
         <ContactForm />
       </main>
