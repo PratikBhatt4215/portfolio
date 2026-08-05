@@ -4,7 +4,7 @@ import Hero from './components/Hero';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import CssLab from './components/CssLab';
-import PuzzleGame from './components/PuzzleGame';
+import CandyCrush from './components/CandyCrush';
 import ContactForm from './components/ContactForm';
 import { ShoppingCart, Code2, Palette, Server, Cloud, Database } from 'lucide-react';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
@@ -254,7 +254,7 @@ export default function App() {
 
         <CssLab hue={hue} setHue={setHue} speedMultiplier={speedMultiplier} setSpeedMultiplier={setSpeedMultiplier} blurVal={blurVal} setBlurVal={setBlurVal} />
 
-        <PuzzleGame />
+        <CandyCrush />
 
         <ContactForm />
       </main>
