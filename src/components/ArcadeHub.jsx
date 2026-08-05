@@ -16,6 +16,18 @@ const CANDY_TYPES = [
 export default function ArcadeHub() {
   const [activeGame, setActiveGame] = useState(null); // 'snake' or 'crush'
   const [showMobileSimulator, setShowMobileSimulator] = useState(false);
+  const [showDesktopAlert, setShowDesktopAlert] = useState(false);
+
+  const handleLaunchSnake = () => {
+    // Detect mobile touch or small screen
+    const isMobile = window.innerWidth < 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isMobile) {
+      setShowDesktopAlert(true);
+    } else {
+      setActiveGame('snake');
+      setTimeout(initSnakeGame, 100);
+    }
+  };
 
   // -------------------------------------------------------------
   // 🐍 RETRO SNAKE GAME STATES & ENGINE
@@ -424,7 +436,7 @@ export default function ArcadeHub() {
                 </div>
               </div>
               <button
-                onClick={() => { setActiveGame('snake'); setTimeout(initSnakeGame, 100); }}
+                onClick={handleLaunchSnake}
                 className="w-full py-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#00f0ff] hover:bg-[#00f0ff]/5 hover:text-[#00f0ff] transition-all text-xs font-semibold cursor-pointer flex items-center justify-center gap-2"
               >
                 <Play size={13} /> Launch on Canvas
@@ -604,6 +616,35 @@ export default function ArcadeHub() {
                 <div className="w-28 h-1 bg-white/30 rounded-full" />
               </div>
 
+            </div>
+          </div>
+        )}
+        {/* 💻 DESKTOP ONLY ALERT POPUP */}
+        {showDesktopAlert && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <div className="bg-[rgba(18,22,40,0.95)] border border-white/10 p-7 rounded-3xl max-w-sm text-center shadow-[0_20px_50px_rgba(0,0,0,0.7)]">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#00f0ff]/10 border border-[#00f0ff]/20 flex items-center justify-center text-2xl">
+                💻
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Desktop Keyboard Required</h3>
+              <p className="text-xs text-[#94a3b8] mb-6 leading-relaxed">
+                Retro Snake requires a physical keyboard (Arrow keys or WASD) to control the snake. 
+                Please switch to a computer to play this game, or launch **Candy Crush** optimized for mobile!
+              </p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => { setShowDesktopAlert(false); openCandyCrush(); }}
+                  className="w-full py-3.5 rounded-xl bg-[#ff0077]/20 border border-[#ff0077]/45 text-[#ff0077] hover:bg-[#ff0077]/30 transition-all text-xs font-semibold cursor-pointer"
+                >
+                  🍬 Play Candy Crush Instead
+                </button>
+                <button
+                  onClick={() => setShowDesktopAlert(false)}
+                  className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#94a3b8] hover:text-white transition-all text-xs font-semibold cursor-pointer border border-white/10"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         )}
